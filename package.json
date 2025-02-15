@@ -1,0 +1,13 @@
+{
+  "name": "ai-todo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "Frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "cd Frontend && npm install && npm run build",
+    "start": "cd Frontend && npm run preview"
+  }
+} 
