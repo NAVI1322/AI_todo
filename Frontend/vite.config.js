@@ -9,16 +9,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
-    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@stripe/stripe-js', 'framer-motion', 'lucide-react', 'react-circular-progressbar', 'react-hot-toast', 'react-icons']
-        }
-      }
-    }
+        },
+      },
+    },
   },
   server: {
     port: 5174,
