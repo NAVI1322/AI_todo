@@ -177,8 +177,8 @@ Requirements:
   }
 });
 
-// GET routes with caching (cache for 10 minutes)
-router.get('/', cacheMiddleware(600), async (req, res) => {
+// GET routes without caching
+router.get('/', async (req, res) => {
   try {
     const paths = await Path.find().sort({ createdAt: -1 });
     res.json(paths);
@@ -187,7 +187,7 @@ router.get('/', cacheMiddleware(600), async (req, res) => {
   }
 });
 
-router.get('/:id', cacheMiddleware(600), async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const path = await Path.findById(req.params.id);
     if (!path) {
@@ -199,8 +199,8 @@ router.get('/:id', cacheMiddleware(600), async (req, res) => {
   }
 });
 
-// POST, PUT, DELETE routes with cache clearing
-router.post('/', clearPathCache, async (req, res) => {
+// POST, PUT, DELETE routes
+router.post('/', async (req, res) => {
   try {
     const path = new Path(req.body);
     const savedPath = await path.save();
@@ -210,7 +210,7 @@ router.post('/', clearPathCache, async (req, res) => {
   }
 });
 
-router.put('/:id', clearPathCache, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const path = await Path.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!path) {
@@ -222,7 +222,7 @@ router.put('/:id', clearPathCache, async (req, res) => {
   }
 });
 
-router.delete('/:id', clearPathCache, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const path = await Path.findByIdAndDelete(req.params.id);
     if (!path) {

@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database.js';
-import redisClient from './config/redis.js';
 import authRoutes from './routes/authRoutes.js';
 import { router as taskRoutes } from './routes/taskRoutes.js';
 import { router as pathRoutes } from './routes/pathRoutes.js';
@@ -12,36 +11,19 @@ import userPreferenceRoutes from './routes/userPreferenceRoutes.js';
 // Load environment variables
 dotenv.config();
 
-// Initialize Express app
+// Create Express app
 const app = express();
 
-// Basic middleware
+// Middleware
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// Request logging middleware
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
-  next();
-});
-
-// Initialize database and Redis
+// Initialize database and services
 const initializeServices = async () => {
   try {
     // Connect to MongoDB
     await connectDB();
     console.log('MongoDB connected successfully');
-
-    // Redis client is already connected in redis.js
-    console.log('Redis client initialized');
 
     // Register routes
     app.use('/api/auth', authRoutes);
@@ -56,8 +38,7 @@ const initializeServices = async () => {
       res.json({ 
         status: 'healthy',
         timestamp: new Date(),
-        uptime: process.uptime(),
-        redis: redisClient.isReady ? 'connected' : 'disconnected'
+        uptime: process.uptime()
       });
     });
 
@@ -78,5 +59,5 @@ const initializeServices = async () => {
   }
 };
 
-// Start the application
+// Start the server
 initializeServices(); 
